@@ -55,14 +55,15 @@ for dir in "$PARENT_DIRECTORY"/*/; do
 
                 # Get Git branch info (if enabled).
                 GIT_BRANCH_INFO=$($GIT_PROGRAM_EXECUTE_PROMPT)
-
-                # Print repository name and branch info.
-                printf "Processing repository: %s %s\n" "$(basename "$dir")" "$GIT_BRANCH_INFO"
-
                 # Execute the Git status command.
-                $GIT_STATUS_EXECUTE_COMMAND
+                gitstatus=$($GIT_STATUS_EXECUTE_COMMAND)
+
+                if [ -n "$gitstatus" ]; then
+                    printf "Processing repository: %s %s\n" "$(basename "$dir")" "$GIT_BRANCH_INFO"
+                    $GIT_STATUS_EXECUTE_COMMAND
+                    echo "----------------------------------------------------"
+                fi
             )
-            echo "----------------------------------------------------"
         fi
     fi
 done
