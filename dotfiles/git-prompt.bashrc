@@ -20,7 +20,7 @@ export GIT_PS1_SHOWCOLORHINTS=true     # Add color to the Git status part.
 
 USER_STRING="\[\033[1;32m\]\u\[\033[0m\]"             # Bold Green Username
 HOST_STRING="@\[\033[1;36m\]\h\[\033[0m\]:"            # Bold Cyan Hostname
-WORKING_DIR="\033[1;33m\w\[\e[0m\]"                   # Yellow Working Directory
+WORKING_DIR="\[\033[1;33m\]\w\[\e[0m\]"               # Yellow Working Directory
 GIT_OUTPUT_STRING="\$(__git_ps1 \" [%s]\"\[\e[33m\])" # Git branch and status (Yellow, in brackets)
 END_STRING="\[\e[0m\] \$ "                            # Reset color, then '$ ' or '# '
 
