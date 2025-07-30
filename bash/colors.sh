@@ -387,7 +387,6 @@ example_progress_bar() {
 # This example uses 'A' for Up and 'B' for Down due to simplicity with 'read -n1'.
 example_interactive_menu() {
     echo "--- Example 6: Interactive Menu ---"
-
     # Hide cursor (optional, but good for interactive elements)
     printf "\e[?25l"
 
@@ -403,7 +402,7 @@ example_interactive_menu() {
         printf "\e[H\e[B" # Move to home, then down 1 line (adjust if script output shifts it)
         printf "\e[J" # Clear screen from cursor down
 
-        echo "Please select an option (A=Up, B=Down, Enter=Select):"
+        echo "Please select an option ( Up, Down):"
         for i in "${!menu_options[@]}"; do
             if [[ "$i" -eq "$selected_option" ]]; then
                 # Highlight selected option with True Color background
@@ -423,15 +422,13 @@ example_interactive_menu() {
         # Read a single character, without echoing, timeout of 0.1s
         read -rsn1 -t 0.1 key
         case "$key" in
-            A) # Up key (using 'A' as placeholder for simplicity)
+            A) # Up key (using 'Up' as placeholder for simplicity)
                 selected_option=$(( (selected_option - 1 + ${#menu_options[@]}) % ${#menu_options[@]} ))
                 ;;
-            B) # Down key (using 'B' as placeholder for simplicity)
+            B) # Down key (using 'Down' as placeholder for simplicity)
                 selected_option=$(( (selected_option + 1) % ${#menu_options[@]} ))
                 ;;
-            '') # Enter key (empty string means Enter was pressed with read -rsn1)
-                return 1 # Signal to exit loop
-                ;;
+            
         esac
         return 0 # Signal to continue loop
     }
@@ -439,7 +436,7 @@ example_interactive_menu() {
     # Main menu loop
     while true; do
         draw_menu_internal
-        read_input_internal || break # Break if read_input_internal returns 1 (Enter was pressed)
+        read_input_internal 
     done
 
     # Show cursor again when done
