@@ -37,14 +37,74 @@
 # --- Basic ANSI Color Definitions (16 Colors) ---
 # These variables hold the escape codes for standard ANSI colors.
 # Use these for wide compatibility. Remember to always reset with COLOR_RESET.
-COLOR_RED='\033[0;31m'    # Standard Red
-COLOR_GREEN='\033[0;32m'  # Standard Green
-COLOR_YELLOW='\033[0;33m' # Standard Yellow
-COLOR_BLUE='\033[0;34m'   # Standard Blue
-COLOR_MAGENTA='\033[0;35m' # Standard Magenta
-COLOR_CYAN='\033[0;36m'   # Standard Cyan
-COLOR_WHITE='\033[0;37m'  # Standard White (or 'reset' for some terminals if no specific color is set)
-COLOR_RESET='\033[0;0m'  # Resets all attributes (color, bold, etc.) to default
+
+# Normal Foreground Colors (0;3x)
+COLOR_BLACK="\033[0;30m"  # Black
+COLOR_RED="\033[0;31m"    # Red
+COLOR_GREEN="\033[0;32m"  # Green
+COLOR_YELLOW="\033[0;33m" # Yellow
+COLOR_BLUE="\033[0;34m"   # Blue
+COLOR_MAGENTA="\033[0;35m" # Magenta
+COLOR_CYAN="\033[0;36m"   # Cyan
+COLOR_WHITE="\033[0;37m"  # White (often displays as light gray)
+
+# Normal Background Colors (0;4x)
+BG_BLACK="\033[0;40m"    # Black Background
+BG_RED="\033[0;41m"      # Red Background
+BG_GREEN="\033[0;42m"    # Green Background
+BG_YELLOW="\033[0;43m"   # Yellow Background
+BG_BLUE="\033[0;44m"     # Blue Background
+BG_MAGENTA="\033[0;45m"  # Magenta Background
+BG_CYAN="\033[0;46m"     # Cyan Background
+BG_WHITE="\033[0;47m"    # White Background (often displays as light gray)
+
+# Bright/Bold Foreground Colors (1;3x or 0;9x depending on terminal/standard)
+# Combining 1 (bold) with 3x (normal color) often results in a "bright" color.
+# Some terminals also explicitly support 9x for bright colors. We'll use 1;3x for broader compatibility.
+COLOR_BRIGHT_BLACK="\033[1;30m"  # Bright Black (often Dark Gray)
+COLOR_BRIGHT_RED="\033[1;31m"    # Bright Red
+COLOR_BRIGHT_GREEN="\033[1;32m"  # Bright Green
+COLOR_BRIGHT_YELLOW="\033[1;33m" # Bright Yellow
+COLOR_BRIGHT_BLUE="\033[1;34m"   # Bright Blue
+COLOR_BRIGHT_MAGENTA="\033[1;35m" # Bright Magenta
+COLOR_BRIGHT_CYAN="\033[1;36m"   # Bright Cyan
+COLOR_BRIGHT_WHITE="\033[1;37m"  # Bright White
+
+# Bright Background Colors (1;4x or 0;10x)
+# Similar to foreground, 1;4x or 0;10x for bright backgrounds.
+# Note: Not all terminals render "bright background" distinctly from normal.
+BG_BRIGHT_BLACK="\033[1;40m"    # Bright Black Background (often Dark Gray)
+BG_BRIGHT_RED="\033[1;41m"      # Bright Red Background
+BG_BRIGHT_GREEN="\033[1;42m"    # Bright Green Background
+BG_BRIGHT_YELLOW="\033[1;43m"   # Bright Yellow Background
+BG_BRIGHT_BLUE="\033[1;44m"     # Bright Blue Background
+BG_BRIGHT_MAGENTA="\033[1;45m"  # Bright Magenta Background
+BG_BRIGHT_CYAN="\033[1;46m"     # Bright Cyan Background
+BG_BRIGHT_WHITE="\033[1;47m"    # Bright White Background
+
+# Other Common Text Attributes
+ATTR_BOLD="\033[1m"      # Bold text
+ATTR_DIM="\033[2m"       # Dim/Faint text (not universally supported)
+ATTR_ITALIC="\033[3m"    # Italic text (not universally supported)
+ATTR_UNDERLINE="\033[4m" # Underlined text
+ATTR_BLINK="\033[5m"     # Blinking text (often annoying, not always supported)
+ATTR_INVERSE="\033[7m"   # Inverse/Reverse (swaps FG/BG colors)
+ATTR_HIDDEN="\033[8m"    # Hidden/Concealed text (e.g., for passwords)
+ATTR_STRIKETHROUGH="\033[9m" # Strikethrough (not universally supported)
+
+# Reset Attributes
+COLOR_RESET="\033[0m"  # Resets all attributes (color, bold, etc.) to default
+
+# Specific Reset Codes (less common, but useful for fine control)
+RESET_FG_COLOR="\033[39m" # Resets only foreground color to default
+RESET_BG_COLOR="\033[49m" # Resets only background color to default
+RESET_BOLD_DIM="\033[22m" # Resets bold or dim effect
+RESET_ITALIC="\033[23m"   # Resets italic effect
+RESET_UNDERLINE="\033[24m" # Resets underline effect
+RESET_BLINK="\033[25m"    # Resets blink effect
+RESET_INVERSE="\033[27m"  # Resets inverse effect
+RESET_HIDDEN="\033[28m"   # Resets hidden effect
+RESET_STRIKETHROUGH="\033[29m" # Resets strikethrough effect
 
 # --- Color Utility Functions ---
 
