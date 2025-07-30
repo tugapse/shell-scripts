@@ -27,6 +27,9 @@ To use this script, follow these steps:
 
 ## Examples
 
+* Color table
+![Alt text](../assets/colors_table.png?raw=true "print_color_table")
+
 * Highlight example
 ![Alt text](../assets/highlight.png?raw=true "example_highlight")
 
