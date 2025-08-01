@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # ==============================================================================
 # Interactive Terminal Menu for Bash
