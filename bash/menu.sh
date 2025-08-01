@@ -330,7 +330,7 @@ draw_menu_internal() {
     printf "\e[H"  >&2
 
     # Display the prompt to stderr.
-    printf "%s\n\n" "$prompt_text" >&2
+    printf "%s\n" "$prompt_text" >&2
 
     # Print menu options in columns to stderr.
     for ((row = 0; row < num_rows; row++)); do
@@ -377,6 +377,44 @@ draw_menu_internal() {
         printf "\n" >&2 # Newline after each row
     done
 }
+
+
+# set_true_forecolor
+# Description: Sets the terminal's foreground (text) color using a True Color (24-bit RGB) value.
+#              Requires a terminal emulator that supports True Color.
+# Arguments:
+#   $1 - Red component (0-255)
+#   $2 - Green component (0-255)
+#   $3 - Blue component (0-255)
+# Usage:
+#   set_true_forecolor 255 165 0  # Sets foreground to orange
+#   echo "True Color!"           # "True Color!" will be orange
+#   reset_color                  # Important: Call reset_color afterwards
+set_true_forecolor() {
+    local r="$1"
+    local g="$2"
+    local b="$3"
+    printf "\e[38;2;%s;%s;%sm" "$r" "$g" "$b"
+}
+
+# set_true_backcolor
+# Description: Sets the terminal's background color using a True Color (24-bit RGB) value.
+#              Requires a terminal emulator that supports True Color.
+# Arguments:
+#   $1 - Red component (0-255)
+#   $2 - Green component (0-255)
+#   $3 - Blue component (0-255)
+# Usage:
+#   set_true_backcolor 40 40 40 # Sets background to dark gray
+#   echo "Background"          # "Background" will have a dark gray background
+#   reset_color                 # Important: Call reset_color afterwards
+set_true_backcolor() {
+    local r="$1"
+    local g="$2"
+    local b="$3"
+    printf "\e[48;2;%s;%s;%sm" "$r" "$g" "$b"
+}
+
 
 # When the script is executed directly, parse arguments and call the menu function.
 # This makes the script a self-contained command-line tool.
