@@ -59,8 +59,8 @@
 # - __COLUMN_SPACING: Number of spaces between columns.
 # ==============================================================================
 
-# Path to your colors file (make sure this path is correct)
-__colors_file="$HOME/.source/colors.bashrc"
+# Script Version
+VERSION="1.0.6"
 
 # Set to 'true' when an option is selected or menu is exited
 __close_menu=false
@@ -73,13 +73,15 @@ __COLUMN_SPACING=4    # Spaces between columns for visual separation
 # --- Default Color Variations (can be overridden by CLI args) ---
 __HIGHLIGHT_FORECOLOR="255 255 255" # White text
 __HIGHLIGHT_BACKCOLOR="0 100 200"   # Medium Blue background
+__HEADER_SEPARATOR="\n"
 
 # Function to display the help message
 display_help() {
     cat << EOF
+Script version: $VERSION
 Usage: ./menu [OPTIONS] "Option 1" "Option 2" ...
-
 This script provides an interactive terminal menu.
+
 
 Options:
   -c, --columns <num>      Number of columns to display options (default: 2)
@@ -112,6 +114,7 @@ _cli_cell_size=""
 _cli_fore_color=""
 _cli_back_color=""
 _cli_prompt_arg="" # Variable for prompt from -p/--prompt
+_cli_header_separator="\n"
 _cli_options=()
 
 # Use getopt to parse long and short options
@@ -152,10 +155,15 @@ while true; do
             _cli_prompt_arg="$2"
             shift 2
             ;;
+        -hs|--header-separator) 
+            _cli_header_separator="$2"
+            shift 2
+            ;;
         -h|--help) # Handle --help argument
             display_help
             exit 0
             ;;
+  
         --) # End of options marker
             shift
             break
@@ -183,13 +191,16 @@ fi
 if [[ -n "$_cli_back_color" ]]; then
     __HIGHLIGHT_BACKCOLOR=$_cli_back_color
 fi
+if [[ -n "$_cli_header_separator" ]]; then
+    __HEADER_SEPARATOR=$_cli_header_separator
+fi
 
 # Determine the final prompt to use: CLI arg > default
 _final_prompt=""
 if [[ -n "$_cli_prompt_arg" ]]; then
     _final_prompt="$_cli_prompt_arg"
 else
-    _final_prompt="Select option:" # Default prompt if -p/--prompt is not provided
+    _final_prompt="Select an option:" # Default prompt if -p/--prompt is not provided
 fi
 
 # ==============================================================================
@@ -325,7 +336,7 @@ draw_menu_internal() {
     printf "\e[H"  >&2
 
     # Display the prompt to stderr.
-    printf "%s\n" "$prompt_text" >&2
+    printf "%s $__HEADER_SEPARATOR" "$prompt_text" >&2
 
     # Print menu options in columns to stderr.
     for ((row = 0; row < num_rows; row++)); do
@@ -370,9 +381,6 @@ draw_menu_internal() {
         printf "\n" >&2 # Newline after each row
     done
 }
-
-
-
 
 # reset_color
 # Description: Resets all terminal formatting attributes (foreground/background colors,
