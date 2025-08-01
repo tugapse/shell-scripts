@@ -32,6 +32,7 @@
 #   -f, --fore-color <R G B> RGB values for highlight foreground color (e.g., "255 255 255")
 #   -b, --back-color <R G B> RGB values for highlight background color (e.g., "0 100 200")
 #   -p, --prompt <text>      Custom prompt message for the menu (default: "Select option:")
+#   -h, --help               Display this help message and exit.
 #
 # Examples:
 #   # Basic usage with options (uses default prompt):
@@ -54,7 +55,7 @@
 #
 # Configuration:
 # - __colors_file: Path to a Bash script defining `set_true_forecolor`,
-#   `set_true_back_color`, and `reset_color` for True Color support.
+#   `set_true_backcolor`, and `reset_color` for True Color support.
 # - __COLUMN_SPACING: Number of spaces between columns.
 # ==============================================================================
 
@@ -78,6 +79,35 @@ if [ -f "$__colors_file" ]; then
     source "$__colors_file"
 fi
 
+# Function to display the help message
+display_help() {
+    cat << EOF
+Usage: ./menu [OPTIONS] "Option 1" "Option 2" ...
+
+This script provides an interactive terminal menu.
+
+Options:
+  -c, --columns <num>      Number of columns to display options (default: 2)
+  -s, --cell-size <num>    Minimum width for each option cell (default: 20)
+  -f, --fore-color <R G B> RGB values for highlight foreground color (e.g., "255 255 255")
+  -b, --back-color <R G B> RGB values for highlight background color (e.g., "0 100 200")
+  -p, --prompt <text>      Custom prompt message for the menu (default: "Select option:")
+  -h, --help               Display this help message and exit.
+
+Examples:
+  ./menu "Apple" "Banana" "Orange"
+  ./menu -p "Which OS?" "Linux" "macOS" "Windows"
+  ./menu -c 3 -s 30 "Item A" "Item B" "Item C" "Item D" "Item E"
+  ./menu -f "255 255 0" -b "50 50 50" "Setting 1" "Setting 2"
+  ./menu -c 4 "txt" "md" "log" "json" | xargs -I {} touch "new_file.{}"
+
+Configuration:
+  - __colors_file: Path to a Bash script defining 'set_true_forecolor',
+    'set_true_backcolor', and 'reset_color' for True Color support.
+  - __COLUMN_SPACING: Number of spaces between columns.
+EOF
+}
+
 # ==============================================================================
 # Argument Parsing
 # ==============================================================================
@@ -90,14 +120,14 @@ _cli_prompt_arg="" # Variable for prompt from -p/--prompt
 _cli_options=()
 
 # Use getopt to parse long and short options
-# -o: short options (c, s, f, b, p all require an argument)
-# --long: long options (columns, cell-size, fore-color, back-color, prompt all require an argument)
-# -- "$@": separates options from positional arguments
-PARSED_OPTIONS=$(getopt -o c:s:f:b:p: --long columns:,cell-size:,fore-color:,back-color:,prompt: -- "$@")
+# -o: short options (c, s, f, b, p, h all require an argument except h)
+# --long: long options (columns, cell-size, fore-color, back-color, prompt, help all require an argument except help)
+# Note: 'h' and 'help' do not have a colon, indicating they don't take an argument.
+PARSED_OPTIONS=$(getopt -o c:s:f:b:p:h --long columns:,cell-size:,fore-color:,back-color:,prompt:,help -- "$@")
 
 # Check for parsing errors
 if [ $? -ne 0 ]; then
-    echo "Error: Invalid arguments provided." >&2
+    echo "Error: Invalid arguments provided. Use --help for usage." >&2
     exit 1
 fi
 
@@ -126,6 +156,10 @@ while true; do
         -p|--prompt)
             _cli_prompt_arg="$2"
             shift 2
+            ;;
+        -h|--help) # Handle --help argument
+            display_help
+            exit 0
             ;;
         --) # End of options marker
             shift
@@ -296,7 +330,7 @@ draw_menu_internal() {
     printf "\e[H"  >&2
 
     # Display the prompt to stderr.
-    printf "%s " "$prompt_text" >&2
+    printf "%s\n\n" "$prompt_text" >&2
 
     # Print menu options in columns to stderr.
     for ((row = 0; row < num_rows; row++)); do
