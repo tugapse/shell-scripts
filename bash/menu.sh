@@ -74,11 +74,6 @@ __COLUMN_SPACING=4    # Spaces between columns for visual separation
 __HIGHLIGHT_FORECOLOR="255 255 255" # White text
 __HIGHLIGHT_BACKCOLOR="0 100 200"   # Medium Blue background
 
-# Source color functions if the file exists
-if [ -f "$__colors_file" ]; then
-    source "$__colors_file"
-fi
-
 # Function to display the help message
 display_help() {
     cat << EOF
@@ -352,10 +347,8 @@ draw_menu_internal() {
                     prefix="> "
                     suffix=" <" # Add a visual indicator for selected option
                     # Apply True Color highlighting if color functions are available
-                    if command -v set_true_forecolor &> /dev/null && command -v set_true_backcolor &> /dev/null && command -v reset_color &> /dev/null; then
-                        set_true_forecolor $__HIGHLIGHT_FORECOLOR >&2
-                        set_true_backcolor $__HIGHLIGHT_BACKCOLOR >&2
-                    fi
+                    set_true_forecolor $__HIGHLIGHT_FORECOLOR >&2
+                    set_true_backcolor $__HIGHLIGHT_BACKCOLOR >&2
                 fi
                 
                 # Calculate padding needed for the display_option_text within its __OPTION_MIN_WIDTH
@@ -366,7 +359,7 @@ draw_menu_internal() {
                 printf "%s%s%*s%s" "$prefix" "$display_option_text" "$text_padding" "" "$suffix" >&2
 
                 # Reset color after each highlighted option
-                if (( option_index == current_selected_option )) && command -v reset_color &> /dev/null; then
+                if (( option_index == current_selected_option )); then
                     reset_color >&2
                 fi
             else
@@ -378,6 +371,19 @@ draw_menu_internal() {
     done
 }
 
+
+
+
+# reset_color
+# Description: Resets all terminal formatting attributes (foreground/background colors,
+#              bold, italics, etc.) to their default values. This is crucial
+#              to prevent colors from "leaking" to subsequent terminal output
+#              (like your prompt).
+# Usage:
+#   reset_color
+reset_color() {
+    printf "\e[0m"
+}
 
 # set_true_forecolor
 # Description: Sets the terminal's foreground (text) color using a True Color (24-bit RGB) value.
@@ -414,6 +420,7 @@ set_true_backcolor() {
     local b="$3"
     printf "\e[48;2;%s;%s;%sm" "$r" "$g" "$b"
 }
+
 
 
 # When the script is executed directly, parse arguments and call the menu function.
